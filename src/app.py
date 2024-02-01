@@ -51,11 +51,13 @@ def handle_hello():
         "users": users_data
     }
 
+    return jsonify(response_body), 200
+
     #get para obtener todas las personas
 # METODO GET PARA PERSON
 @app.route('/persons', methods=['GET'])
 def get_all_persons():
-    persons_query = Person.query.all() #estamos haciendo una consulta a la User para que traiga todos
+    persons_query = Person.query.all() #estamos haciendo una consulta a la persons para que traiga todos
     persons_data = list(map(lambda item: item.serialize(), persons_query))#procesamos la info consultada y la volvemos un array
     # print(persons_query)
     # print(persons_data)
@@ -69,7 +71,7 @@ def get_all_persons():
 
 # METODO GET PARA PLANETAS
 @app.route('/planets', methods=['GET'])
-def get_plenet():
+def get_all_plenet():
     planets_query = Planets.query.all()
     planets_data = list(map(lambda item: item.serialize(), planets_query))
 
@@ -78,6 +80,20 @@ def get_plenet():
         "planets": planets_data
     
 }
+    return jsonify(response_body), 200
+
+# medoto GET para VEHICULOS
+@app.route('/vehiculos', methods=['GET'])
+def get_all_vehiculos():
+    vehiculos_query = Vehiculos.query.all()
+    vehiculos_data = list(map(lambda item: item.serialize(), vehiculos_query))
+
+    response_body = {
+        "msg": "ok",
+        "vehiculos": vehiculos_data
+    
+}
+    return jsonify(response_body), 200
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
