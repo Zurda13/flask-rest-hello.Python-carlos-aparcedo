@@ -52,7 +52,7 @@ def handle_hello():
     }
 
     #get para obtener todas las personas
-
+# METODO GET PARA PERSON
 @app.route('/persons', methods=['GET'])
 def get_all_persons():
     persons_query = Person.query.all() #estamos haciendo una consulta a la User para que traiga todos
@@ -67,6 +67,17 @@ def get_all_persons():
 
     return jsonify(response_body), 200
 
+# METODO GET PARA PLANETAS
+@app.route('/planets', methods=['GET'])
+def get_plenet():
+    planets_query = Planets.query.all()
+    planets_data = list(map(lambda item: item.serialize(), planets_query))
+
+    response_body = {
+        "msg": "ok",
+        "planets": planets_data
+    
+}
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
