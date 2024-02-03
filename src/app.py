@@ -110,15 +110,15 @@ def get_all_favorites():
     return jsonify(response_body), 200
 
 #para obtener datos de UNA sola PERSONA
-@app.route('/people/<int:people_id>', methods=['GET'])
-def get_one_people(people_id):
+@app.route('/person/<int:person_id>', methods=['GET'])
+def get_one_person(person_id):
     # print(people_id)
-    people_query = Person.query.filter_by(id=people_id).first()
+    person_query = Person.query.filter_by(id=person_id).first()
     # print(people_query.serialize())
  
     response_body = {
         "msg": "ok", 
-        "people": people_query.serialize()
+        "person": person_query.serialize()
     }
 
     return jsonify(response_body), 200
@@ -127,7 +127,7 @@ def get_one_people(people_id):
 @app.route('/vehicle/<int:vehicles_id>', methods=['GET'])
 def get_one_vehicle(vehicle_id):
     # print(vehicles_id)
-    vehicle_query = Person.query.filter_by(id=vehicle_id).first()
+    vehicle_query = Vehicles.query.filter_by(id=vehicle_id).first()
     # print(people_query.serialize())
  
     response_body = {
@@ -141,7 +141,7 @@ def get_one_vehicle(vehicle_id):
 @app.route('/planet/<int:planet_id>', methods=['GET'])
 def get_one_planet(planet_id):
     # print(vehicles_id)
-    planet_query = Person.query.filter_by(id=planet_id).first()
+    planet_query = Planets.query.filter_by(id=planet_id).first()
     # print(people_query.serialize())
  
     response_body = {
@@ -184,6 +184,32 @@ def create_one_planet():
 
     return jsonify(response_body), 200
 
+# POST para CREAR un nuevo VEHICULO
+@app.route('/vehicles', methods=['POST'])
+def create_one_vehicle():
+    body = request.json
+
+    new_vehicle = Vehicles(name=body["name"], model=body["model"], dimensions=body["dimensions"], top_speed=body["top_speed"])
+
+    db.session.add(new_vehicle)
+    db.session.commit()
+
+    response_body = {
+        "msg": "vehicle created",
+    }
+
+    return jsonify(response_body)
+
+# @app.route('/favorite/person', methods=['POST']) ###### ejemplo de ejercicio de POST favorites/person
+# def add_favorite_person():
+#     request_body_Favorite_Person = request.get_json()
+#     new_FavoritePerson = Favorites.Person(user_id=request_body_Favorite_Person["user_id"], person_id=request_body_Favorite_Person["person_id"])
+#     db.session.add(new_FavoritePerson)
+
+#     db.session.commit()
+#     response={"msg": "Its OK"}
+    
+#     return jsonify(response), 200
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))

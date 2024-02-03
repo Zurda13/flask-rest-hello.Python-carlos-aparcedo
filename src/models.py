@@ -61,21 +61,23 @@ class Planets (db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "nombre": self.name,
-            "clima": self.climate,
-            "terreno": self.terrain,
-            "rotacion": self.rotation,
-            "poblacion": self.population,
-            "periodo_orbital": self.orbital_period,
-            "diametro": self.diameter
+            "name": self.name,
+            "climate": self.climate,
+            "terrain": self.terrain,
+            "rotation": self.rotation,
+            "population": self.population,
+            "orbital_period": self.orbital_period,
+            "diameter": self.diameter
             # do not serialize the password, its a security breach
         }
 
 class Vehicles (db.Model):
     __tablename__ = 'vehicles'
     id = db.Column(db.Integer, primary_key=True,nullable=False)
-    name_Vehicles = db.Column(db.String(50),nullable=False)
+    name = db.Column(db.String(50),nullable=False)
     model = db.Column(db.String(50),nullable=False)
+    dimensions = db.Column(db.String(50),nullable=False)
+    top_speed = db.Column(db.String(50),nullable=False)
     favorites = db.relationship('Favorites', backref='vehicles', lazy=True)
 
     def __repr__(self):
@@ -84,7 +86,7 @@ class Vehicles (db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "name_Vehicles": self.name_Vehicles,
+            "name_Vehicles": self.name,
             "model": self.model
             # do not serialize the password, its a security breach
         }
