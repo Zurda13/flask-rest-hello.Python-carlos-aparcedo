@@ -8,12 +8,19 @@ class User(db.Model):
     favorites = db.relationship('Favorites', backref='user', lazy=True)
     def __repr__(self):
         return '<User %r>' % self.id
-    def serialize(self):
+    # def serialize(self):
+    #     return {
+    #         "id": self.id,
+    #         "email": self.email,
+    #         "favorites": self.favorites
+    #         # do not serialize the password, its a security breach
+    #     }
+    def serialize_protected(self):
         return {
             "id": self.id,
             "email": self.email,
-            "favorites": self.favorites
-            # do not serialize the password, its a security breach
+            "favorites": self.favorites,
+            "password": self.password
         }
 class Person (db.Model):
     id = db.Column(db.Integer, primary_key=True)

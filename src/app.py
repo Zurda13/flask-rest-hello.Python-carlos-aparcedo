@@ -12,8 +12,7 @@ from models import db, User , Person, Planets, Vehicles, Favorites
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
 #from models import Person
 app = Flask(__name__)
-app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
-jwt = JWTManager(app)
+
 app.url_map.strict_slashes = False
 db_url = os.getenv("DATABASE_URL")
 if db_url is not None:
@@ -25,6 +24,9 @@ MIGRATE = Migrate(app, db)
 db.init_app(app)
 CORS(app)
 setup_admin(app)
+
+app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
+jwt = JWTManager(app)
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
@@ -160,19 +162,29 @@ def login():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
     user_query = User.query.filter_by(email=email).first()
+
     print(user_query.email)
+
     if email != user_query.email or password != user_query.password:
+
         return jsonify({"msg": "Bad username or password"}), 401
+    
     access_token = create_access_token(identity=email)
     return jsonify(access_token=access_token)
 
-# PROTECTED #
-@app.route("/protected", methods=["GET"])
-@jwt_required()
+# PROTECTED # aqui definimos la ruta protegida
+@app.route("/profile", methods=["GET"])
+@jwt_required() #este es el "portero/seguridad que protegue al establecimiento"
+
+#este es el establecimiento hasta el "200"
 def protected():
     # Access the identity of the current user with get_jwt_identity
     current_user = get_jwt_identity()
-    return jsonify(logged_in_as=current_user), 200
+    info_profile = User.query.filter_by(email=current_user).first()
+
+    return jsonify({"user":info_profile.serialize_protected()}), 200
+
+# this only runs if '$ python src/app.py' is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
     app.run(host='0.0.0.0', port=PORT, debug=False)
